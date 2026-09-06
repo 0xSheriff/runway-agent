@@ -32,7 +32,7 @@ export default function TransactionList({ transactions, chainId, loading }: Tran
       <div className="flex items-center justify-between border-b border-[#1E1E22] pb-2 mb-3">
         <div className="flex items-center gap-2 font-mono text-xs text-[#71717A]">
           <ListFilter className="h-3.5 w-3.5 text-[#D9A441]" />
-          RECENT TREASURY AUDIT AUDIT TRAIL ({transactions.length})
+          RECENT TREASURY AUDIT TRAIL ({transactions.length})
         </div>
         <span className="font-mono text-[11px] text-[#A1A1AA]">{chainObj.name}</span>
       </div>
