@@ -1,18 +1,28 @@
 import { ChainId, Transaction } from './types';
 
-// Shared EVM explorer base URLs by chainId
-const EVM_EXPLORER_APIS: Record<string, string> = {
-  '56': 'https://api.bscscan.com/api',
-  '1': 'https://api.etherscan.io/api',
-  '8453': 'https://api.basescan.org/api',
-};
+// Shared EVM explorer base URLs by chainId — append API key from env if available
+function getExplorerUrl(chainId: string): string {
+  const urls: Record<string, string> = {
+    '56': 'https://api.bscscan.com/api',
+    '1': 'https://api.etherscan.io/api',
+    '8453': 'https://api.basescan.org/api',
+  };
+  return urls[chainId] || '';
+}
 
-// RPC fallbacks for balance & block data
+function getExplorerApiKey(chainId: string): string {
+  if (chainId === '56') return process.env.BSCSCAN_API_KEY || '';
+  if (chainId === '1') return process.env.ETHERSCAN_API_KEY || '';
+  if (chainId === '8453') return process.env.BASESCAN_API_KEY || '';
+  return '';
+}
+
+// RPC endpoints — prefer env vars, fall back to reliable public nodes
 const RPC_ENDPOINTS: Record<string, string> = {
-  '56': 'https://bsc-dataseed.binance.org',
-  '1': 'https://cloudflare-eth.com',
-  '8453': 'https://mainnet.base.org',
-  'solana': 'https://api.mainnet-beta.solana.com',
+  '56': process.env.NEXT_PUBLIC_BSC_RPC || 'https://bsc-rpc.publicnode.com',
+  '1': process.env.NEXT_PUBLIC_ETH_RPC || 'https://eth.llamarpc.com',
+  '8453': process.env.NEXT_PUBLIC_BASE_RPC || 'https://base-rpc.publicnode.com',
+  'solana': process.env.NEXT_PUBLIC_SOL_RPC || 'https://api.mainnet-beta.solana.com',
 };
 
 // Approximate Native Token Prices (USD)
@@ -60,8 +70,11 @@ export async function fetchEVMTransactions(address: string, chainId: ChainId): P
     const rawWei = BigInt(hexBalance);
     const nativeBalance = Number(rawWei) / 1e18;
 
-    // 2. Fetch transactions from shared block explorer API
-    const txUrl = `${baseUrl}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=100&sort=desc`;
+    // 2. Fetch transactions from shared block explorer API (with optional API key)
+    const baseUrl = getExplorerUrl(chainId);
+    const apiKey = getExplorerApiKey(chainId);
+    const apiKeyParam = apiKey ? `&apikey=${apiKey}` : '';
+    const txUrl = `${baseUrl}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=100&sort=desc${apiKeyParam}`;
     const txRes = await fetch(txUrl, { next: { revalidate: 60 } });
 
     if (txRes.status === 429) {
