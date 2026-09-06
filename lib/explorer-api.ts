@@ -4,7 +4,7 @@ import { ChainId, Transaction } from './types';
 function getExplorerUrl(chainId: string): string {
   const urls: Record<string, string> = {
     '56': 'https://api.bscscan.com/api',
-    '1': 'https://api.etherscan.io/api',
+    '1': 'https://api.etherscan.io/v2/api?chainid=1',
     '8453': 'https://api.basescan.org/api',
   };
   return urls[chainId] || '';
@@ -71,10 +71,10 @@ const baseUrl = getExplorerUrl(chainId.toString());
     const nativeBalance = Number(rawWei) / 1e18;
 
     // 2. Fetch transactions from shared block explorer API (with optional API key)
-    const baseUrl = getExplorerUrl(chainId);
     const apiKey = getExplorerApiKey(chainId);
     const apiKeyParam = apiKey ? `&apikey=${apiKey}` : '';
-    const txUrl = `${baseUrl}?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=100&sort=desc${apiKeyParam}`;
+    const separator = baseUrl.includes('?') ? '&' : '?';
+    const txUrl = `${baseUrl}${separator}module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=1&offset=100&sort=desc${apiKeyParam}`;
     const txRes = await fetch(txUrl, { next: { revalidate: 60 } });
 
     if (txRes.status === 429) {
