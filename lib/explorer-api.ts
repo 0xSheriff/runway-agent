@@ -45,7 +45,7 @@ export interface RawFetchResult {
  * Shared fetch function for EVM block explorers (BscScan, Etherscan, Basescan) using chainId-based URL.
  */
 export async function fetchEVMTransactions(address: string, chainId: ChainId): Promise<RawFetchResult> {
-  const baseUrl = EVM_EXPLORER_APIS[chainId];
+const baseUrl = getExplorerUrl(chainId.toString());
   if (!baseUrl) {
     throw new Error(`Unsupported EVM chain ID: ${chainId}`);
   }
