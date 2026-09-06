@@ -3,17 +3,17 @@ import { ChainId, Transaction } from './types';
 // Shared EVM explorer base URLs by chainId — append API key from env if available
 function getExplorerUrl(chainId: string): string {
   const urls: Record<string, string> = {
-    '56': 'https://api.bscscan.com/api',
+    '56': 'https://api.etherscan.io/v2/api?chainid=56',
     '1': 'https://api.etherscan.io/v2/api?chainid=1',
-    '8453': 'https://api.basescan.org/api',
+    '8453': 'https://api.etherscan.io/v2/api?chainid=8453',
   };
   return urls[chainId] || '';
 }
 
 function getExplorerApiKey(chainId: string): string {
-  if (chainId === '56') return process.env.BSCSCAN_API_KEY || '';
+  if (chainId === '56') return process.env.ETHERSCAN_API_KEY || '';
   if (chainId === '1') return process.env.ETHERSCAN_API_KEY || '';
-  if (chainId === '8453') return process.env.BASESCAN_API_KEY || '';
+  if (chainId === '8453') return process.env.ETHERSCAN_API_KEY || '';
   return '';
 }
 

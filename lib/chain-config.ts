@@ -49,6 +49,6 @@ export const SUPPORTED_CHAINS: ChainOption[] = [
 
 // Pre-loaded real active BNB Chain wallet for instant 3-second demo mode
 export const DEMO_WALLET = {
-  address: '0x8894E0a0c962CB623c1969a5426659E41b163530',
-  chainId: '56' as const,
+  address: '0xc4589D0DC9D8E4Daa0026f956Cb1E01Ba9f52d34',
+  chainId: '1' as const,
 };
