@@ -32,8 +32,8 @@ npm run dev
 
 ## Live demo
 
-[runway-agent.vercel.app](#) — replace with your actual Vercel URL once deployed.
+[https://runway-agent-kfkr.vercel.app](#) .
 
 ## Docs
 
-Full API and methodology docs at `/docs` inside the running app.
+Full API and methodology docs at `https://runway-agent-kfkr.vercel.app/docs` inside the running app.
